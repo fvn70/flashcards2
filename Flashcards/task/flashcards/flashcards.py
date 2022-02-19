@@ -2,6 +2,7 @@ import io
 import json
 import logging
 import random
+import sys
 
 
 def _add():
@@ -120,6 +121,13 @@ output = io.StringIO()
 logging.basicConfig(stream=output, level=logging.INFO, format='%(message)s')
 log = logging.getLogger()
 fn_out = ''
+args = sys.argv
+
+for arg in args:
+    if '--import_from=' in arg:
+        _import(arg.split('=')[1])
+    if '--export_to=' in arg:
+        fn_out = arg.split('=')[1]
 
 while True:
     print()
@@ -128,4 +136,7 @@ while True:
         break
     elif cmd in cmds:
         eval(f'_{cmd.split()[0]}()')
+
+if fn_out:
+    _export(fn_out)
 print("Bye bye!")
